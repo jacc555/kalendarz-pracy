@@ -4,8 +4,8 @@
 <meta name="theme-color" content="#305496">
 <meta name="mobile-web-app-capable" content="yes">
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32.png">
-<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="icon-192.png">
 <title>Kalendarz pracy i wypłata</title>
 <style>
 :root{--bg:#f3f5f9;--card:#fff;--tx:#1b1f27;--mu:#6b7280;--ln:#e3e7ee;--ac:#305496;--in:#fffbe8;--ib:#cfd5e0;--hb:#305496;color-scheme:light dark;--sat:#92d050;--red:#ff3b3b;--tod:#ffe699;
@@ -171,4 +171,8 @@ $("days").addEventListener("focusin",e=>{const t=e.target;if(t.dataset.k!="h"||t
 window.addEventListener("pagehide",save);window.addEventListener("beforeunload",save);evl();render();
 if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
 if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().catch(()=>{});
+<script>
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+}
 </script></body></html>
