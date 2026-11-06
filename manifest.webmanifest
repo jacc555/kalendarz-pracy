@@ -1,7 +1,7 @@
 {
   "id": "./",
   "name": "Kalendarz pracy i wypłata",
-  "short_name": "Kalendarz",
+  "short_name": "Kalendarz pracy",
   "description": "Kalendarz godzin pracy, nadgodzin i miesięcznej wypłaty.",
   "lang": "pl",
   "start_url": "./",
