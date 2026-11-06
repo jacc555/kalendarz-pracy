@@ -171,9 +171,4 @@ $("days").addEventListener("focusin",e=>{const t=e.target;if(t.dataset.k!="h"||t
 window.addEventListener("pagehide",save);window.addEventListener("beforeunload",save);evl();render();
 if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
 if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().catch(()=>{});
-</script>
-<script>
-if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
-}
 </script></body></html>
