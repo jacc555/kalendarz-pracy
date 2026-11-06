@@ -1,45 +1,19 @@
-# Kalendarz pracy i wypłata – aplikacja na Androida (PWA)
+# Kalendarz pracy i wypłata – PWA
 
-W paczce: `index.html` (aplikacja), `manifest.webmanifest`, `sw.js` (praca offline), folder `icons/`, `.gitlab-ci.yml` (tylko dla GitLaba).
-Pliki nie zawierają żadnych Twoich danych – wpisy zostają w pamięci telefonu.
+## Publikacja na GitHub Pages
+1. Rozpakuj ZIP na komputerze.
+2. W repozytorium `kalendarz-pracy` wgraj **zawartość** folderu (index.html, manifest.webmanifest, sw.js i folder icons), nie sam plik ZIP.
+3. Wszystkie pliki muszą być bezpośrednio w katalogu głównym repozytorium, a ikony w folderze `icons`.
+4. W GitHub: Settings → Pages → Deploy from a branch → `main` → `/(root)`.
+5. Poczekaj, aż wdrożenie się zakończy, a następnie otwórz `https://jacc555.github.io/kalendarz-pracy/` w Chrome na Androidzie.
 
-## 1. Wystaw aplikację pod adresem https
+Manifest zawiera ścieżki względne, więc działa w podkatalogu GitHub Pages. Service Worker ma nową wersję cache (`v2`), aby wymusić odświeżenie zasobów po wdrożeniu.
 
-### GitHub Pages (prościej)
-1. github.com → **New repository** → nazwa np. `kalendarz-pracy`, widoczność **Public** → Create repository.
-2. **uploading an existing file** → przeciągnij `index.html`, `manifest.webmanifest`, `sw.js` i cały folder `icons` → **Commit changes**.
-3. **Settings → Pages → Build and deployment → Source: Deploy from a branch**, Branch: `main`, folder `/ (root)` → Save.
-4. Po minucie, dwóch aplikacja działa pod `https://TWOJ-LOGIN.github.io/kalendarz-pracy/`.
+## Instalacja
+W Chrome otwórz stronę, odczekaj chwilę, dotknij strony i wybierz menu ⋮ → „Zainstaluj aplikację”. Jeżeli Chrome nadal pokazuje niedostępną instalację, nie usuwaj danych witryny przed wykonaniem eksportu danych z aplikacji.
 
-### GitLab Pages
-1. **New project → Create blank project**, nazwa np. `kalendarz-pracy`.
-2. Wgraj `index.html`, `manifest.webmanifest`, `sw.js`, `icons/`. Plik `.gitlab-ci.yml` utwórz przyciskiem **+ → New file** i wklej:
+## Dane i prywatność
+Dane kalendarza są przechowywane lokalnie w pamięci przeglądarki/instalacji. Ta paczka nie dodaje serwera ani synchronizacji między urządzeniami. Przed czyszczeniem danych witryny, reinstalacją lub zmianami w Chrome użyj „Eksportuj dane”.
 
-```yaml
-pages:
-  stage: deploy
-  script:
-    - mkdir public
-    - cp -r index.html manifest.webmanifest sw.js icons public/
-  artifacts:
-    paths:
-      - public
-  rules:
-    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-```
-
-3. Po zakończeniu pipeline'u adres znajdziesz w **Deploy → Pages**. Jeśli projekt jest prywatny, w **Settings → General → Visibility** ustaw dostęp do Pages na **Everyone** (aplikacja nie zawiera danych), inaczej telefon nie zainstaluje aplikacji.
-4. GitLab bywa, że prosi o weryfikację konta przed pierwszym pipeline'em.
-
-## 2. Instalacja na telefonie
-1. Otwórz adres w **Chrome** na Androidzie.
-2. Menu ⋮ → **Zainstaluj aplikację** (lub **Dodaj do ekranu głównego → Zainstaluj**).
-3. Uruchamiaj z ikony „Kalendarz" – otwiera się w osobnym oknie, bez paska przeglądarki. Po pierwszym wejściu działa też bez internetu.
-
-## 3. Dane
-- Dane zapisują się automatycznie w pamięci tej aplikacji na telefonie.
-- Przeniesienie z obecnej wersji: w starym pliku **Eksportuj dane**, w zainstalowanej aplikacji **Importuj dane**.
-- Co jakiś czas rób **Eksportuj dane** jako kopię zapasową. Wyczyszczenie danych witryny w Chrome lub odinstalowanie aplikacji kasuje wpisy.
-
-## 4. Aktualizacja
-Podmień `index.html` w repozytorium (wgraj plik o tej samej nazwie). Po wejściu do aplikacji z internetem nowa wersja załaduje się sama; jeśli nie, zamknij i otwórz aplikację jeszcze raz.
+## Aktualizacja
+Prześlij ponownie pliki z tej paczki do katalogu głównego repozytorium i zatwierdź zmiany. Po wdrożeniu zamknij wszystkie karty/aplikacje kalendarza, otwórz stronę ponownie z internetem.
