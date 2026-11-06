@@ -41,6 +41,7 @@ input{width:100%;font:inherit;padding:7px 4px;text-align:center;border:1px solid
 @media(min-width:900px){main{max-width:1120px;display:grid;grid-template-columns:minmax(0,1fr) 440px;grid-template-rows:auto repeat(9,auto) 1fr;gap:0 14px;align-items:start}main>*{grid-column:2}main>.nav{grid-column:1/-1}main>#lst{grid-column:1;grid-row:2/span 10}}
 @media(max-width:380px){.row{grid-template-columns:minmax(0,1fr) 52px 52px var(--fcw);gap:4px;padding:5px 6px;font-size:14px}.row.hd{padding:0 6px;font-size:12px}.row input{padding:7px 2px}}
 details summary{font-weight:700;cursor:pointer}.set{display:grid;grid-template-columns:1fr 110px;gap:6px 8px;align-items:center;margin-top:8px}
+.sub{border-top:1px solid var(--ln);margin-top:14px;padding-top:12px}
 </style></head><body><main>
 <div class="card nav"><button id="pv">‹</button><h1 id="ttl"></h1><button id="nx">›</button></div>
 <div class="hero"><span>Przepracowane godziny (godziny + nadgodziny)</span><b id="wk"></b></div>
@@ -53,11 +54,12 @@ details summary{font-weight:700;cursor:pointer}.set{display:grid;grid-template-c
 <div class="card" id="url"></div>
 <div class="card"><b>Staż pracy</b><div id="stz"></div></div>
 <div class="card" id="yr"></div><div class="card" id="annual"></div>
+<div class="card" id="evc"><b>Własne wydarzenia w kalendarzu</b><div class="evf"><input id="evd" type="date"><input id="evt" placeholder="Opis wydarzenia"></div><button class="b" id="eva">Dodaj wydarzenie</button><div id="evl"></div></div>
 <div class="card"><details><summary>Ustawienia i stawki</summary><div class="set" id="set"></div>
-<p><b>Własne wydarzenia w kalendarzu</b></p><div class="evf"><input id="evd" type="date"><input id="evt" placeholder="Opis wydarzenia"></div><button class="b" id="eva">Dodaj wydarzenie</button><div id="evl"></div><p class="mu">Przełączniki „Pokaż…” ukrywają tylko wiersze w wynagrodzeniu – kwoty większe od 0 zawsze wchodzą do WYPŁATY RAZEM. Sprzedany urlop wpisujesz osobno dla każdego miesiąca.</p>
-<p class="mu">Wpisy zapisują się w tym telefonie osobno dla każdego miesiąca. Nadgodziny w soboty i niedziele/święta wpisuj w kolumnie „Nadg.”: sobota +100%, niedziela i święto +200%, pozostałe nadgodziny +100%. Godziny z kolumny „Godziny” liczą się ze stawką podstawową.</p></details></div>
-<div class="card"><b>Dane</b><button class="b" id="exp" style="background:var(--hb);color:#fff;font-weight:700;padding:12px">Eksportuj dane</button><button class="b" id="imp" style="font-weight:700;padding:12px">Importuj dane</button><input type="file" id="impf" accept=".json,.html,application/json,text/html" hidden><p class="mu" id="svmsg">Eksport pyta, gdzie zapisać plik z danymi (.json); wskazanie istniejącego pliku nadpisuje go zamiast tworzyć kopię z numerkiem. Import wczytuje taki plik (także .html zapisany starym przyciskiem ZAPISZ) i zastępuje obecne dane. Plik aplikacji pozostaje czysty.</p></div>
-<div class="card"><b>Instalacja aplikacji</b><button class="b" id="inst" hidden style="background:var(--hb);color:#fff;font-weight:700;padding:12px">Zainstaluj aplikację</button><button class="b" id="chk">Sprawdź instalację</button><div class="mu" id="chkout" style="white-space:pre-wrap;margin-top:8px"></div></div>
+<p class="mu">Przełączniki „Pokaż…” ukrywają tylko wiersze w wynagrodzeniu – kwoty większe od 0 zawsze wchodzą do WYPŁATY RAZEM. Sprzedany urlop wpisujesz osobno dla każdego miesiąca.</p>
+<p class="mu">Wpisy zapisują się w tym telefonie osobno dla każdego miesiąca. Nadgodziny w soboty i niedziele/święta wpisuj w kolumnie „Nadg.”: sobota +100%, niedziela i święto +200%, pozostałe nadgodziny +100%. Godziny z kolumny „Godziny” liczą się ze stawką podstawową.</p>
+<div class="sub"><b>Dane</b><button class="b" id="exp" style="background:var(--hb);color:#fff;font-weight:700;padding:12px">Eksportuj dane</button><button class="b" id="imp" style="font-weight:700;padding:12px">Importuj dane</button><input type="file" id="impf" accept=".json,.html,application/json,text/html" hidden><p class="mu" id="svmsg">Eksport pyta, gdzie zapisać plik z danymi (.json); wskazanie istniejącego pliku nadpisuje go zamiast tworzyć kopię z numerkiem. Import wczytuje taki plik (także .html zapisany starym przyciskiem ZAPISZ) i zastępuje obecne dane. Plik aplikacji pozostaje czysty.</p></div>
+<div class="sub"><b>Instalacja aplikacji</b><button class="b" id="inst" hidden style="background:var(--hb);color:#fff;font-weight:700;padding:12px">Zainstaluj aplikację</button><button class="b" id="chk">Sprawdź instalację</button><div class="mu" id="chkout" style="white-space:pre-wrap;margin-top:8px"></div></div></details></div>
 </main>
 <script>
 const MN=["Styczeń","Luty","Marzec","Kwiecień","Maj","Czerwiec","Lipiec","Sierpień","Wrzesień","Październik","Listopad","Grudzień"];
