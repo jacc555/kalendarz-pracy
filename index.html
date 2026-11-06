@@ -55,6 +55,7 @@ details summary{font-weight:700;cursor:pointer}.set{display:grid;grid-template-c
 <p><b>Własne wydarzenia w kalendarzu</b></p><div class="evf"><input id="evd" type="date"><input id="evt" placeholder="Opis wydarzenia"></div><button class="b" id="eva">Dodaj wydarzenie</button><div id="evl"></div><p class="mu">Przełączniki „Pokaż…” ukrywają tylko wiersze w wynagrodzeniu – kwoty większe od 0 zawsze wchodzą do WYPŁATY RAZEM. Sprzedany urlop wpisujesz osobno dla każdego miesiąca.</p>
 <p class="mu">Wpisy zapisują się w tym telefonie osobno dla każdego miesiąca. Nadgodziny w soboty i niedziele/święta wpisuj w kolumnie „Nadg.”: sobota +100%, niedziela i święto +200%, pozostałe nadgodziny +100%. Godziny z kolumny „Godziny” liczą się ze stawką podstawową.</p></details></div>
 <div class="card"><b>Dane</b><button class="b" id="exp" style="background:var(--hb);color:#fff;font-weight:700;padding:12px">Eksportuj dane</button><button class="b" id="imp" style="font-weight:700;padding:12px">Importuj dane</button><input type="file" id="impf" accept=".json,.html,application/json,text/html" hidden><p class="mu" id="svmsg">Eksport pyta, gdzie zapisać plik z danymi (.json); wskazanie istniejącego pliku nadpisuje go zamiast tworzyć kopię z numerkiem. Import wczytuje taki plik (także .html zapisany starym przyciskiem ZAPISZ) i zastępuje obecne dane. Plik aplikacji pozostaje czysty.</p></div>
+<div class="card"><b>Instalacja aplikacji</b><button class="b" id="inst" hidden style="background:var(--hb);color:#fff;font-weight:700;padding:12px">Zainstaluj aplikację</button><button class="b" id="chk">Sprawdź instalację</button><div class="mu" id="chkout" style="white-space:pre-wrap;margin-top:8px"></div></div>
 </main>
 <script>
 const MN=["Styczeń","Luty","Marzec","Kwiecień","Maj","Czerwiec","Lipiec","Sierpień","Wrzesień","Październik","Listopad","Grudzień"];
@@ -171,4 +172,31 @@ $("days").addEventListener("focusin",e=>{const t=e.target;if(t.dataset.k!="h"||t
 window.addEventListener("pagehide",save);window.addEventListener("beforeunload",save);evl();render();
 if("serviceWorker" in navigator)addEventListener("load",()=>navigator.serviceWorker.register("sw.js").catch(()=>{}));
 if(navigator.storage&&navigator.storage.persist)navigator.storage.persist().catch(()=>{});
+
+let dp=null;
+addEventListener("beforeinstallprompt",e=>{e.preventDefault();dp=e;$("inst").hidden=false});
+addEventListener("appinstalled",()=>{dp=null;$("inst").hidden=true});
+$("inst").onclick=async()=>{if(!dp)return;dp.prompt();try{await dp.userChoice}catch(e){}dp=null;$("inst").hidden=true};
+$("chk").onclick=async()=>{
+ const o=[],L=t=>{o.push(t);$("chkout").textContent=o.join("\n")};
+ L("Adres: "+location.href);
+ L("Tryb: "+(matchMedia("(display-mode: standalone)").matches?"zainstalowana aplikacja":"karta przeglądarki"));
+ L("Chrome uznaje stronę za instalowalną: "+(dp?"TAK (użyj przycisku Zainstaluj aplikację)":"NIE (albo już zainstalowana)"));
+ try{const r=await navigator.serviceWorker.getRegistration();L("Service worker: "+(r?"zarejestrowany, aktywny: "+(r.active?"tak":"nie")+", steruje stroną: "+(navigator.serviceWorker.controller?"tak":"nie"):"BRAK")+(r&&r.active?" ("+new URL(r.active.scriptURL).pathname+")":""))}catch(e){L("Service worker: błąd "+e)}
+ const lk=document.querySelector('link[rel="manifest"]');
+ if(!lk){L("Manifest: BRAK linku w <head>");return}
+ try{
+  const r=await fetch(lk.href,{cache:"no-store"});
+  L("Manifest: "+r.status+" "+(r.headers.get("content-type")||"")+" "+lk.href);
+  const m=await r.json();
+  L("name="+m.name+" | short_name="+m.short_name+" | display="+m.display);
+  L("start_url="+m.start_url+" | scope="+m.scope+" | id="+m.id);
+  for(const ic of (m.icons||[])){
+   const u=new URL(ic.src,r.url).href;
+   const res=await fetch(u,{cache:"no-store"}).catch(()=>null);
+   let dim="";
+   if(res&&res.ok){try{const bm=await createImageBitmap(await res.blob());dim=bm.width+"x"+bm.height}catch(e){dim="nie da się odczytać obrazu"}}
+   L("Ikona "+ic.src+" (deklar. "+ic.sizes+", "+(ic.purpose||"any")+"): "+(res?res.status:"brak połączenia")+(dim?" rzeczywisty rozmiar "+dim:""))}
+ }catch(e){L("Manifest: błąd odczytu – "+e)}
+ L("Koniec sprawdzenia. Zrób zrzut ekranu tego pola.")};
 </script></body></html>
