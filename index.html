@@ -108,9 +108,10 @@ function calc(){
  let nightBase=0,nightEx=0;const HN=hol(Y);for(let d=1;d<=N;d++)if(m.night&&m.night[d]){const w9=new Date(Y,M,d).getDay();if(!HN[M+"-"+d]&&w9>0&&w9<6)nightBase+=num(m.h[d]);else nightEx+=num(m.o[d])}
   const sd=num(m.sold),nOT=ew+cr,allOT=nOT+os+ens,effOT=allOT>0?(nOT*r*(1+S.ot/100)+os*r*(1+S.sat/100)+ens*r*(1+S.sun/100))/allOT:r*(1+S.ot/100);
   const L=[["Godziny podstawowe",hs,r,1],["Godziny w soboty",os,r*(1+S.sat/100),0],["Godziny w niedziele i święta",ens,r*(1+S.sun/100),0],["Nadgodziny (z zaległymi)",allOT,effOT,1],["Dodatek za nocki (+20%)",nightBase+nightEx,r*.2,1,!S.showNight],["Sprzedany urlop ("+f2(sd)+" dni, +100%)",sd*(num(S.norm)||8),r*2,1,!(S.showSold||sd>0)]];
- let sum=0,h="";
- L.forEach(x=>{const k=x[1]*x[2];if(x[3])sum+=k;if(x[4])return;h+=`<div class="ln"${x[3]?"":' style="opacity:.6"'}><span>${x[0]}<br><em>${f2(x[1])} h × ${zl(x[2])}${x[3]?"":" · wliczone w nadgodziny"}</em></span><span>${zl(k)}</span></div>`});
+ let sum=0,h="",ins=0;
+ L.forEach((x,i)=>{const k=x[1]*x[2];if(x[3])sum+=k;if(x[4])return;h+=`<div class="ln"${x[3]?"":' style="opacity:.6"'}><span>${x[0]}<br><em>${f2(x[1])} h × ${zl(x[2])}${x[3]?"":" · wliczone w nadgodziny"}</em></span><span>${zl(k)}</span></div>`;if(i===0)ins=h.length});
  [["Premia uznaniowa",num(S.uzn),1],["Premia kierownicza",num(S.kier),S.showBonusKier],["Premia dyrektorska",num(S.bonusDir),S.showBonusDir],["Premia obsługi dwóch maszyn",num(S.bonusMachines),S.showBonusMachines],["Premia stanowiskowa",num(S.bonusPosition),S.showBonusPosition],["Premia za dodatkowe zajęcia",num(S.bonusExtra),S.showBonusExtra],["Stażowe",stz,S.showStaz||stazMo]].forEach(x=>{sum+=x[1];if(!x[2])return;h+=`<div class="ln"><span>${x[0]}${x[0]==="Stażowe"&&num(S.sm1)&&num(S.sm2)?`<small style="display:block;color:var(--mu);font-size:10px;font-weight:400">${MN[num(S.sm1)-1]||esc(S.sm1)} – ${MN[num(S.sm2)-1]||esc(S.sm2)}</small>`:""}</span><span>${zl(x[1])}</span></div>`});
+ {const hr=`<div class="ln" style="opacity:.6"><span>Stawka godzinowa<br><em>(z premiami, nadgodzinami i dodatkami)</em></span><span>${work>0?zl(sum/work)+"/h":"–"}</span></div>`;h=h.slice(0,ins)+hr+h.slice(ins)}
  const q=(a,v,t)=>`<div class="ln${t?" tot":""}"><span>${a}</span><span>${zl(v)}</span></div>`,k=num(S.konto);
  if(stazMo)h+=q("Wypłata w kopercie + stażowe",sum-k)+q("Wypłata + stażowe",sum);
   h+=q("Koperta",sum-k,1)+q("Wpływ na konto (stały)",k); const tot=q("WYPŁATA RAZEM",sum,1);
