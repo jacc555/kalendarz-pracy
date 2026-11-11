@@ -60,8 +60,8 @@ details summary{font-weight:700;cursor:pointer}.set{display:grid;grid-template-c
 @keyframes tick{0%{transform:scale(0)}55%{transform:scale(1.3)}100%{transform:scale(1)}}
 @keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.14)}}
 @keyframes ping{0%{transform:scale(1);opacity:.9}80%,100%{transform:scale(2.6);opacity:0}}
-@keyframes slr{from{opacity:0;transform:translateX(26px)}to{opacity:1;transform:none}}
-@keyframes sll{from{opacity:0;transform:translateX(-26px)}to{opacity:1;transform:none}}
+@keyframes slr{from{opacity:0;transform:translateX(34px)}to{opacity:1;transform:none}}
+@keyframes sll{from{opacity:0;transform:translateX(-34px)}to{opacity:1;transform:none}}
 @media(prefers-reduced-motion:no-preference){
 :root{interpolate-size:allow-keywords}
 details::details-content{block-size:0;overflow:clip;transition:block-size .3s var(--e),content-visibility .3s allow-discrete}
@@ -75,13 +75,27 @@ details[data-k="an"]::details-content{block-size:auto;overflow:visible;transitio
 .bki.pop svg{animation:bump .4s var(--e)}
 .bc{transition:fill .25s var(--e)}.bp{transition:opacity .2s}
 .bk.due .bki svg{animation:breathe 2.8s ease-in-out infinite}
-.sl-r .row{animation:slr .34s var(--e) both;animation-delay:min(calc(var(--i,0)*9ms),220ms)}
-.sl-l .row{animation:sll .34s var(--e) both;animation-delay:min(calc(var(--i,0)*9ms),220ms)}
+body.sl-r :is(.nav,.hero,.two,.big,#lst){animation:slr .4s var(--e) both}
+body.sl-l :is(.nav,.hero,.two,.big,#lst){animation:sll .4s var(--e) both}
+body[class*="sl-"] .hero{animation-delay:.03s}body[class*="sl-"] .two{animation-delay:.05s}body[class*="sl-"] .big{animation-delay:.07s}body[class*="sl-"] #lst{animation-delay:.09s}
+#ttl span{display:inline-block;animation:letter .5s var(--e) both;animation-delay:calc(var(--i)*30ms)}
+#pv svg{animation:nudgeL 2.6s ease-in-out infinite}#nx svg{animation:nudgeR 2.6s ease-in-out infinite}
+#toast{transition:opacity .25s,transform .3s var(--e)}
 .chart.grow .bar{animation:grow .6s var(--e) both;animation-delay:calc(var(--i,0)*55ms)}
 .chart.grow .barvalue{animation:fadein .35s ease both;animation-delay:calc(var(--i,0)*55ms + 380ms)}
 }
+@keyframes letter{from{opacity:0;transform:translateY(10px)}}
+@keyframes nudgeL{0%,100%{transform:translateX(0)}50%{transform:translateX(-3px)}}
+@keyframes nudgeR{0%,100%{transform:translateX(0)}50%{transform:translateX(3px)}}
+.nav{position:sticky;top:0;z-index:30;margin-top:0;box-shadow:0 3px 12px rgba(0,0,0,.14);background:color-mix(in srgb,var(--card) 92%,transparent);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+main{padding-top:0}.nav{margin-top:10px}
+.nav button{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;padding:0;transition:transform .15s var(--e),background-color .2s}.nav button:active{transform:scale(.88)}
+#ttl{cursor:pointer;-webkit-user-select:none;user-select:none}
+#toast{position:fixed;left:50%;bottom:calc(16px + env(safe-area-inset-bottom,0px));transform:translate(-50%,24px);opacity:0;pointer-events:none;background:#222;color:#fff;border-radius:999px;padding:10px 12px 10px 18px;display:flex;gap:10px;align-items:center;font-size:14px;box-shadow:0 6px 20px rgba(0,0,0,.35);z-index:60}
+#toast.on{opacity:1;transform:translate(-50%,0);pointer-events:auto}#toast button{background:transparent;border:0;color:#8fb4f5;font-weight:700;padding:4px 8px}
+#rst{font-weight:700;padding:12px;color:#d9363e;border-color:currentColor}#rst svg{vertical-align:-3px;margin-right:8px}
 </style></head><body><main>
-<div class="card nav"><button id="pv" aria-label="Poprzedni miesiąc">‹</button><h1 id="ttl"></h1><button id="nx" aria-label="Następny miesiąc">›</button></div>
+<div class="card nav"><button id="pv" aria-label="Poprzedni miesiąc"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><h1 id="ttl"></h1><button id="nx" aria-label="Następny miesiąc"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
 <div class="hero"><span>Przepracowane godziny (godziny + nadgodziny)</span><b id="wk"></b></div>
 <div class="two"><div class="card tile"><b id="kp"></b><span>Koperta</span></div><div class="card tile"><b id="rz"></b><span>WYPŁATA RAZEM</span></div></div>
 <div class="card big"><div><b id="nm"></b><span>do przepracowania w miesiącu</span></div><div><b id="dn"></b><span>przepracowane dni</span></div><div><b id="of"></b><span>dni wolne w miesiącu</span></div></div>
@@ -96,10 +110,11 @@ details[data-k="an"]::details-content{block-size:auto;overflow:visible;transitio
 <div class="card"><details><summary>Ustawienia i stawki</summary><div class="set" id="set"></div>
 <p class="mu">Przełączniki „Pokaż…” ukrywają tylko wiersze w wynagrodzeniu – kwoty większe od 0 zawsze wchodzą do WYPŁATY RAZEM. Sprzedany urlop wpisujesz osobno dla każdego miesiąca.</p>
 <p class="mu">Wpisy zapisują się w tym telefonie osobno dla każdego miesiąca. Nadgodziny w soboty i niedziele/święta wpisuj w kolumnie „Nadg.”: sobota +100%, niedziela i święto +200%, pozostałe nadgodziny +100%. Godziny z kolumny „Godziny” liczą się ze stawką podstawową.</p>
-<div class="sub"><b>Dane</b><button class="b" id="exp" style="background:var(--hb);color:#fff;font-weight:700;padding:12px">Eksportuj dane</button><button class="b" id="imp" style="font-weight:700;padding:12px">Importuj dane</button><input type="file" id="impf" accept=".json,.html,application/json,text/html" hidden><p class="mu" id="svmsg">Eksport pyta, gdzie zapisać plik z danymi (.json); wskazanie istniejącego pliku nadpisuje go zamiast tworzyć kopię z numerkiem. Import wczytuje taki plik (także .html zapisany starym przyciskiem ZAPISZ) i zastępuje obecne dane. Plik aplikacji pozostaje czysty.</p></div>
+<div class="sub"><b>Dane</b><button class="b" id="exp" style="background:var(--hb);color:#fff;font-weight:700;padding:12px">Eksportuj dane</button><button class="b" id="imp" style="font-weight:700;padding:12px">Importuj dane</button><button class="b" id="rst" type="button"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18M8 6V4h8v2M6 6l1 14h10l1-14M10 11v5M14 11v5"/></svg>Zeruj wszystko</button><input type="file" id="impf" accept=".json,.html,application/json,text/html" hidden><p class="mu" id="svmsg">Eksport pyta, gdzie zapisać plik z danymi (.json); wskazanie istniejącego pliku nadpisuje go zamiast tworzyć kopię z numerkiem. Import wczytuje taki plik (także .html zapisany starym przyciskiem ZAPISZ) i zastępuje obecne dane. Plik aplikacji pozostaje czysty.</p></div>
 <div class="sub"><b>Przypomnienie o kopii zapasowej</b><div class="bk off" id="bk"><span><b>Ostatnia kopia:</b> <span id="bkd"></span><span class="mu" id="bkn"></span></span><button type="button" class="bki" id="bki" role="switch" aria-checked="false" aria-label="Przypomnienie o kopii zapasowej"><svg viewBox="0 0 24 24" width="30" height="30"><circle class="bc" cx="12" cy="12" r="10.5"/><path class="bp" d="M7 12.5l3.3 3.3L17 9" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div></div>
 <div class="sub"><b>Instalacja aplikacji</b><button class="b" id="inst" hidden style="background:var(--hb);color:#fff;font-weight:700;padding:12px">Zainstaluj aplikację</button><button class="b" id="chk">Sprawdź instalację</button><div class="mu" id="chkout" style="white-space:pre-wrap;margin-top:8px"></div></div></details></div>
 </main>
+<div id="toast" role="status" aria-live="polite"></div>
 <script>
 const MN=["Styczeń","Luty","Marzec","Kwiecień","Maj","Czerwiec","Lipiec","Sierpień","Wrzesień","Październik","Listopad","Grudzień"];
 const WD=["niedziela","poniedziałek","wtorek","środa","czwartek","piątek","sobota"];
@@ -133,7 +148,7 @@ const RM=matchMedia("(prefers-reduced-motion: reduce)");let rt,slt,pendingGrow=t
 function tween(el,to,fmt){const first=el._d==null,from=first?0:el._d,dur=first?1500:480,dec=(String(Math.round(to*100)/100).split(".")[1]||"").length,pw=Math.pow(10,dec),rd=v=>Math.round(v*pw)/pw;cancelAnimationFrame(el._r);
  if(RM.matches||from===to){el._d=to;el.textContent=fmt(to);return}
  el.textContent=fmt(rd(from));const t0=performance.now(),step=t=>{const p=Math.min(1,(t-t0)/dur),v=from+(to-from)*(1-Math.pow(1-p,4));el._d=v;el.textContent=fmt(p<1?rd(v):to);if(p<1)el._r=requestAnimationFrame(step)};el._r=requestAnimationFrame(step)}
-function slide(dir){if(RM.matches)return;const el=$("days");el.classList.remove("sl-l","sl-r");void el.offsetWidth;el.classList.add(dir>0?"sl-r":"sl-l");clearTimeout(slt);slt=setTimeout(()=>el.classList.remove("sl-l","sl-r"),750)}
+function slide(dir){if(RM.matches)return;const el=document.body;el.classList.remove("sl-l","sl-r");void el.offsetWidth;el.classList.add(dir>0?"sl-r":"sl-l");clearTimeout(slt);slt=setTimeout(()=>el.classList.remove("sl-l","sl-r"),750)}
 const io="IntersectionObserver" in window?new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting){io.unobserve(en.target);en.target.classList.remove("pre");en.target.classList.add("grow");pendingGrow=false}}),{threshold:.35}):null;
 function growChart(){const c=document.querySelector("#annual .chart");if(!c||!pendingGrow)return;if(RM.matches||!io){pendingGrow=false;return}c.classList.add("pre");io.disconnect();io.observe(c)}
 const BK=KEY+":backup";let lastBk=0;try{lastBk=+localStorage.getItem(BK)||0}catch(e){}
@@ -144,12 +159,12 @@ function bkUpdate(pop){const on=!!S.bkRem,d=lastBk?Math.floor((Date.now()-lastBk
 function markBackup(){lastBk=Date.now();try{localStorage.setItem(BK,String(lastBk))}catch(e){}bkUpdate(true)}
 $("bki").onclick=()=>{S.bkRem=S.bkRem?0:1;save();if(navigator.vibrate)navigator.vibrate(10);bkUpdate(true)};
 document.addEventListener("visibilitychange",()=>{if(!document.hidden)bkUpdate()});bkUpdate(true);
-function goToday(){const t=new Date(),y=t.getFullYear(),m=t.getMonth();if(y===Y&&m===M){const r=document.querySelector(".row.t");if(r)r.scrollIntoView({block:"center",behavior:RM.matches?"auto":"smooth"});return}const dir=y*12+m>Y*12+M?1:-1;Y=y;M=m;render();slide(dir)}
+function goToday(){const t=new Date(),y=t.getFullYear(),m=t.getMonth();if(y===Y&&m===M){const r=document.querySelector(".row.t");if(r)r.scrollIntoView({block:"center",behavior:RM.matches?"auto":"smooth"});return}const dir=y*12+m>Y*12+M?1:-1;Y=y;M=m;render();toTop();slide(dir)}
 {let sx=0,sy=0,st=0,ok=false;
  addEventListener("touchstart",e=>{const t=e.touches[0];ok=e.touches.length===1&&!!e.target.closest("#lst,.nav,.hero,.two,.big")&&!e.target.closest("input,select,textarea");sx=t.clientX;sy=t.clientY;st=Date.now()},{passive:true});
  addEventListener("touchend",e=>{if(!ok)return;ok=false;const t=e.changedTouches[0],dx=t.clientX-sx,dy=t.clientY-sy;if(Math.abs(dx)>70&&Math.abs(dx)>Math.abs(dy)*1.8&&Date.now()-st<700){if(navigator.vibrate)navigator.vibrate(8);go(dx<0?1:-1)}},{passive:true})}
 function render(){
- $("ttl").textContent=MN[M]+" "+Y;
+ setTitle(MN[M]+" "+Y);
  {const nf=(S.showU?1:0)+(S.showNight?1:0)+(S.showL4?1:0);$("lst").style.setProperty("--nf",Math.max(1,nf));if(nf)$("lst").style.removeProperty("--fcw");else $("lst").style.setProperty("--fcw","0px")}
  $("hdr").innerHTML=`<span>Dzień</span><span>Godziny</span><span>Nadg.</span><span class="dayflags">${S.showU?'<span class="fh">U</span>':""}${S.showNight?'<span class="fh">N</span>':""}${S.showL4?'<span class="fh">L4</span>':""}</span>`;const H=hol(Y),N=new Date(Y,M+1,0).getDate(),m=cur(),T=new Date();let out="";const ss=soldSet(m,Y,M);
  {const si=$("sold_in"),sl=$("soldlab");sl.textContent="Sprzedany urlop – "+MN[M]+" "+Y+" (dni)";si.style.display=sl.style.display=S.showSold?"":"none";if(document.activeElement!==si)si.value=m.sold||""}
@@ -217,9 +232,13 @@ $("imp").onclick=async()=>{
   catch(e){if(e&&e.name=="AbortError")return}}
  $("impf").click()};
 $("impf").onchange=e=>{const f=e.target.files[0];e.target.value="";if(f)loadData(f)};
-const go=n=>{M+=n;if(M>11){M=0;Y++}if(M<0){M=11;Y--}render();slide(n)};
+const toTop=()=>window.scrollTo({top:0,behavior:RM.matches?"auto":"smooth"});
+const go=n=>{M+=n;if(M>11){M=0;Y++}if(M<0){M=11;Y--}render();toTop();slide(n)};
 $("pv").onclick=()=>go(-1);$("nx").onclick=()=>go(1);
 $("ttl").onclick=goToday;
+let lastT="";function setTitle(t){if(t===lastT)return;lastT=t;$("ttl").innerHTML=[...t].map((c,i)=>`<span style="--i:${i}">${c===" "?"&nbsp;":c}</span>`).join("")}
+let tt;function toast(m,undo){const el=$("toast");el.innerHTML="<span></span>"+(undo?'<button type="button">Cofnij</button>':"");el.firstChild.textContent=m;const b=el.querySelector("button");if(b)b.onclick=()=>{undo();el.classList.remove("on")};el.classList.add("on");clearTimeout(tt);tt=setTimeout(()=>el.classList.remove("on"),7000)}
+$("rst").onclick=()=>{if(!confirm("Zerować WSZYSTKO? Zostaną usunięte wszystkie wpisy, ustawienia i wydarzenia z tej aplikacji."))return;const bak=JSON.stringify({S,D}),bk0=lastBk;S={...DEF};D={};lastBk=0;try{localStorage.removeItem(BK)}catch(e){}T=Date.now();save();buildSet();evl();render();bkUpdate();toast("Wszystko wyzerowane",()=>{const j=JSON.parse(bak);S=j.S;D=j.D;lastBk=bk0;try{if(bk0)localStorage.setItem(BK,String(bk0))}catch(e){}save();buildSet();evl();render();bkUpdate()})};
 function yopts(sel){const ys=new Set([new Date().getFullYear(),Y,sel]);Object.keys(D).forEach(k=>ys.add(+k.split("-")[0]));return[...ys].filter(x=>x>1999).sort((a,b)=>a-b).map(y=>`<option value="${y}"${y==sel?" selected":""}>${y}</option>`).join("")}
 const ysel=(id,sel)=>`<div style="margin:6px 0"><select id="${id}" style="font:inherit;padding:4px 8px">${yopts(sel)}</select></div>`;
 function ystats(Y){const H=hol(Y);let hs=0,os=0,wk=0,wd=0,off=0,uz=0,sl=0,wrk=0,ovt=0,l4=0,dY=((Y%4==0&&Y%100!=0)||Y%400==0)?366:365;
@@ -247,7 +266,7 @@ let evOpen=false;
 function evl(){const E=S.ev||[],L=E.map((e,i)=>[e,i]).sort((a,b)=>a[0].d<b[0].d?-1:1).map(x=>{const a=x[0].d.split("-");return`<div class="ln"><span>${a[2]}.${a[1]}.${a[0]} – ${esc(x[0].t)}</span><button data-i="${x[1]}">×</button></div>`}).join("");$("evl").innerHTML=E.length?`<details data-k="ev"${evOpen?" open":""}><summary>Wpisane wydarzenia (${E.length})</summary><div style="max-height:240px;overflow-y:auto">${L}</div></details>`:""}
 $("evl").addEventListener("toggle",e=>{if(e.target.dataset&&e.target.dataset.k=="ev")evOpen=e.target.open},true);
 $("eva").onclick=()=>{const d=$("evd").value,t=$("evt").value.trim();if(!d||!t)return;S.ev=S.ev||[];S.ev.push({d,t});$("evt").value="";save();evl();render()};
-$("evl").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;S.ev.splice(+b.dataset.i,1);save();evl();render()});
+$("evl").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;const it=S.ev.splice(+b.dataset.i,1)[0];save();evl();render();toast("Usunięto wydarzenie",()=>{S.ev.push(it);save();evl();render()})});
 $("pay").addEventListener("toggle",e=>{if(e.target.tagName=="DETAILS")payOpen=e.target.open},true);
 $("days").addEventListener("focusin",e=>{const t=e.target;if(t.dataset.k!="h"||t.value!==""||t.readOnly)return;const v=num(S.norm)||8,d=t.closest(".row").dataset.d;cur().h[d]=v;t.value=v;save();calc();setTimeout(()=>{try{t.select()}catch(x){}},0)});
 window.addEventListener("pagehide",save);window.addEventListener("beforeunload",save);save();evl();render();
