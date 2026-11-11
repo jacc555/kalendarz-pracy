@@ -42,8 +42,46 @@ input{width:100%;font:inherit;padding:7px 4px;text-align:center;border:1px solid
 @media(max-width:380px){.row{grid-template-columns:minmax(0,1fr) 52px 52px var(--fcw);gap:4px;padding:5px 6px;font-size:14px}.row.hd{padding:0 6px;font-size:12px}.row input{padding:7px 2px}}
 details summary{font-weight:700;cursor:pointer}.set{display:grid;grid-template-columns:1fr 110px;gap:6px 8px;align-items:center;margin-top:8px}
 .sub{border-top:1px solid var(--ln);margin-top:14px;padding-top:12px}
+
+:root{--e:cubic-bezier(.2,.8,.2,1)}
+.hero b,.tile b{font-variant-numeric:tabular-nums}
+#set input[type=checkbox]{width:22px;height:22px;padding:0;justify-self:center;accent-color:var(--ac)}
+.flag{position:relative}
+.tw{white-space:nowrap}.tdl{font-size:12px;font-weight:600;opacity:.85}
+.dot{position:relative;display:inline-block;width:9px;height:9px;margin-left:7px;border-radius:50%;vertical-align:1px;box-shadow:0 0 0 2px #fff}
+.dot.g{background:#2f9e44}.dot.rd{background:#e03131}
+.dot::after{content:"";position:absolute;inset:-2px;border:2px solid #fff;border-radius:50%;opacity:0}
+.bk{display:flex;align-items:center;gap:12px;margin-top:10px;font-size:13px;line-height:1.3}.bk>span{flex:1;min-width:0}
+.bki{flex:none;margin-right:8px;border:0;background:none;padding:0;color:#2f9e44;line-height:0;border-radius:50%;-webkit-tap-highlight-color:transparent}.bki svg{display:block}
+.bc{fill:currentColor;stroke:currentColor;stroke-width:1.5}.bk.off .bc{fill:none}.bk.off .bp{opacity:0}.bk.off .bki{color:var(--mu)}.bk.due .bki{color:#e0a100}.bk b{font-weight:600}.bk .mu{display:block}
+@keyframes grow{from{transform:scaleY(0)}to{transform:scaleY(1)}}
+@keyframes fadein{from{opacity:0}to{opacity:1}}
+@keyframes bump{0%{transform:scale(1)}40%{transform:scale(1.35)}100%{transform:scale(1)}}
+@keyframes tick{0%{transform:scale(0)}55%{transform:scale(1.3)}100%{transform:scale(1)}}
+@keyframes breathe{0%,100%{transform:scale(1)}50%{transform:scale(1.14)}}
+@keyframes ping{0%{transform:scale(1);opacity:.9}80%,100%{transform:scale(2.6);opacity:0}}
+@keyframes slr{from{opacity:0;transform:translateX(26px)}to{opacity:1;transform:none}}
+@keyframes sll{from{opacity:0;transform:translateX(-26px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:no-preference){
+:root{interpolate-size:allow-keywords}
+details::details-content{block-size:0;overflow:clip;transition:block-size .3s var(--e),content-visibility .3s allow-discrete}
+details[open]::details-content{block-size:auto}
+details[data-k="an"]::details-content{block-size:auto;overflow:visible;transition:none}
+.row{transition:background-color .3s var(--e),color .3s var(--e),box-shadow .3s var(--e)}
+.flag{transition:background-color .2s var(--e),color .2s,transform .12s var(--e)}
+.flag:active{transform:scale(1.2)}
+.flag.pop,#set input[type=checkbox].pop{animation:bump .3s var(--e)}
+.dot::after{animation:ping 1.8s var(--e) infinite}
+.bki.pop svg{animation:bump .4s var(--e)}
+.bc{transition:fill .25s var(--e)}.bp{transition:opacity .2s}
+.bk.due .bki svg{animation:breathe 2.8s ease-in-out infinite}
+.sl-r .row{animation:slr .34s var(--e) both;animation-delay:min(calc(var(--i,0)*9ms),220ms)}
+.sl-l .row{animation:sll .34s var(--e) both;animation-delay:min(calc(var(--i,0)*9ms),220ms)}
+.chart.grow .bar{animation:grow .6s var(--e) both;animation-delay:calc(var(--i,0)*55ms)}
+.chart.grow .barvalue{animation:fadein .35s ease both;animation-delay:calc(var(--i,0)*55ms + 380ms)}
+}
 </style></head><body><main>
-<div class="card nav"><button id="pv">‹</button><h1 id="ttl"></h1><button id="nx">›</button></div>
+<div class="card nav"><button id="pv" aria-label="Poprzedni miesiąc">‹</button><h1 id="ttl"></h1><button id="nx" aria-label="Następny miesiąc">›</button></div>
 <div class="hero"><span>Przepracowane godziny (godziny + nadgodziny)</span><b id="wk"></b></div>
 <div class="two"><div class="card tile"><b id="kp"></b><span>Koperta</span></div><div class="card tile"><b id="rz"></b><span>WYPŁATA RAZEM</span></div></div>
 <div class="card big"><div><b id="nm"></b><span>do przepracowania w miesiącu</span></div><div><b id="dn"></b><span>przepracowane dni</span></div><div><b id="of"></b><span>dni wolne w miesiącu</span></div></div>
@@ -59,13 +97,14 @@ details summary{font-weight:700;cursor:pointer}.set{display:grid;grid-template-c
 <p class="mu">Przełączniki „Pokaż…” ukrywają tylko wiersze w wynagrodzeniu – kwoty większe od 0 zawsze wchodzą do WYPŁATY RAZEM. Sprzedany urlop wpisujesz osobno dla każdego miesiąca.</p>
 <p class="mu">Wpisy zapisują się w tym telefonie osobno dla każdego miesiąca. Nadgodziny w soboty i niedziele/święta wpisuj w kolumnie „Nadg.”: sobota +100%, niedziela i święto +200%, pozostałe nadgodziny +100%. Godziny z kolumny „Godziny” liczą się ze stawką podstawową.</p>
 <div class="sub"><b>Dane</b><button class="b" id="exp" style="background:var(--hb);color:#fff;font-weight:700;padding:12px">Eksportuj dane</button><button class="b" id="imp" style="font-weight:700;padding:12px">Importuj dane</button><input type="file" id="impf" accept=".json,.html,application/json,text/html" hidden><p class="mu" id="svmsg">Eksport pyta, gdzie zapisać plik z danymi (.json); wskazanie istniejącego pliku nadpisuje go zamiast tworzyć kopię z numerkiem. Import wczytuje taki plik (także .html zapisany starym przyciskiem ZAPISZ) i zastępuje obecne dane. Plik aplikacji pozostaje czysty.</p></div>
+<div class="sub"><b>Przypomnienie o kopii zapasowej</b><div class="bk off" id="bk"><span><b>Ostatnia kopia:</b> <span id="bkd"></span><span class="mu" id="bkn"></span></span><button type="button" class="bki" id="bki" role="switch" aria-checked="false" aria-label="Przypomnienie o kopii zapasowej"><svg viewBox="0 0 24 24" width="30" height="30"><circle class="bc" cx="12" cy="12" r="10.5"/><path class="bp" d="M7 12.5l3.3 3.3L17 9" fill="none" stroke="#fff" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div></div>
 <div class="sub"><b>Instalacja aplikacji</b><button class="b" id="inst" hidden style="background:var(--hb);color:#fff;font-weight:700;padding:12px">Zainstaluj aplikację</button><button class="b" id="chk">Sprawdź instalację</button><div class="mu" id="chkout" style="white-space:pre-wrap;margin-top:8px"></div></div></details></div>
 </main>
 <script>
 const MN=["Styczeń","Luty","Marzec","Kwiecień","Maj","Czerwiec","Lipiec","Sierpień","Wrzesień","Październik","Listopad","Grudzień"];
 const WD=["niedziela","poniedziałek","wtorek","środa","czwartek","piątek","sobota"];
 const KEY="kalendarz-pracy-v2";let yrOpen=true,anOpen=true,yrSel=null,anSel=null;
-const DEF={showSold:1,showStaz:1,showU:1,urlop:0,ev:[],rate:0,uzn:0,kier:0,ot:100,sat:100,sun:200,konto:0,staz:0,sm1:0,sm2:0,norm:8,s1:"",s2:"",showNight:1,showL4:1,showBonusDir:1,showBonusMachines:1,showBonusPosition:1,showBonusExtra:1,bonusDir:0,bonusMachines:0,bonusPosition:0,bonusExtra:0,showBonusKier:1};
+const DEF={showSold:1,showStaz:1,showU:1,urlop:0,ev:[],rate:0,uzn:0,kier:0,ot:100,sat:100,sun:200,konto:0,staz:0,sm1:0,sm2:0,norm:8,s1:"",s2:"",showNight:1,showL4:1,showBonusDir:1,showBonusMachines:1,showBonusPosition:1,showBonusExtra:1,bonusDir:0,bonusMachines:0,bonusPosition:0,bonusExtra:0,showBonusKier:1,bkRem:1};
 const FLD=[["rate","Stawka godzinowa (zł)"],["uzn","Premia uznaniowa (zł)"],["ot","Dodatek za nadgodziny (%)"],["sat","Dodatek za sobotę (%)"],["sun","Dodatek za niedzielę i święta (%)"],["konto","Wpływ na konto, stały (zł)"],["staz","Stażowe (zł)"],["sm1","Miesiąc stażowego 1"],["sm2","Miesiąc stażowego 2"],["norm","Godzin w dniu roboczym"],["urlop","Dni urlopu w roku"],["s1","Start pracy, bez umowy"],["s2","Start pracy, z umową"],["bonusDir","Premia dyrektorska (zł)"],["bonusMachines","Premia obsługi dwóch maszyn (zł)"],["bonusPosition","Premia stanowiskowa (zł)"],["bonusExtra","Premia za dodatkowe zajęcia (zł)"],["kier","Premia kierownicza (zł)"]];
 let S={...DEF},D={},now=new Date(),Y=now.getFullYear(),M=now.getMonth();
 let T=0;try{const j=JSON.parse(localStorage.getItem(KEY)||"{}");S={...DEF,...(j.S||{})};D=j.D||{};T=j.t||0}catch(e){}
@@ -90,6 +129,25 @@ add(E,"Wielkanoc");add(p(1),"Poniedziałek Wielkanocny");add(p(49),"Zielone Świ
 const key=()=>Y+"-"+(M+1);
 const cur=()=>D[key()]||(D[key()]={h:{},o:{},u:{},l4:{},night:{},c:""});
 function soldSet(m,y,mo){const s={},n=Math.ceil(num(m.sold)),H=hol(y),N=new Date(y,mo+1,0).getDate();let c=0;for(let d=1;d<=N&&c<n;d++){const w=new Date(y,mo,d).getDay();if(w>0&&w<6&&!H[mo+"-"+d]&&!(m.u&&m.u[d])&&!(m.l4&&m.l4[d])){s[d]=1;c++}}return s}
+const RM=matchMedia("(prefers-reduced-motion: reduce)");let rt,slt,pendingGrow=true;
+function tween(el,to,fmt){const first=el._d==null,from=first?0:el._d,dur=first?1500:480,dec=(String(Math.round(to*100)/100).split(".")[1]||"").length,pw=Math.pow(10,dec),rd=v=>Math.round(v*pw)/pw;cancelAnimationFrame(el._r);
+ if(RM.matches||from===to){el._d=to;el.textContent=fmt(to);return}
+ el.textContent=fmt(rd(from));const t0=performance.now(),step=t=>{const p=Math.min(1,(t-t0)/dur),v=from+(to-from)*(1-Math.pow(1-p,4));el._d=v;el.textContent=fmt(p<1?rd(v):to);if(p<1)el._r=requestAnimationFrame(step)};el._r=requestAnimationFrame(step)}
+function slide(dir){if(RM.matches)return;const el=$("days");el.classList.remove("sl-l","sl-r");void el.offsetWidth;el.classList.add(dir>0?"sl-r":"sl-l");clearTimeout(slt);slt=setTimeout(()=>el.classList.remove("sl-l","sl-r"),750)}
+const io="IntersectionObserver" in window?new IntersectionObserver(es=>es.forEach(en=>{if(en.isIntersecting){io.unobserve(en.target);en.target.classList.remove("pre");en.target.classList.add("grow");pendingGrow=false}}),{threshold:.35}):null;
+function growChart(){const c=document.querySelector("#annual .chart");if(!c||!pendingGrow)return;if(RM.matches||!io){pendingGrow=false;return}c.classList.add("pre");io.disconnect();io.observe(c)}
+const BK=KEY+":backup";let lastBk=0;try{lastBk=+localStorage.getItem(BK)||0}catch(e){}
+function bkUpdate(pop){const on=!!S.bkRem,d=lastBk?Math.floor((Date.now()-lastBk)/864e5):0,due=on&&(!lastBk||d>=7),el=$("bk");el.classList.toggle("off",!on);el.classList.toggle("due",due);$("bki").setAttribute("aria-checked",on?"true":"false");
+ $("bkd").textContent=lastBk?new Date(lastBk).toLocaleDateString("pl-PL")+(due?" · "+d+" dni temu":""):"jeszcze nie wykonano";
+ $("bkn").textContent="Przypomnienie co 7 dni · "+(on?"włączone":"wyłączone")+" (dotknij ikony)";
+ if(pop&&on){const i=$("bki");i.classList.remove("pop");void i.offsetWidth;i.classList.add("pop")}}
+function markBackup(){lastBk=Date.now();try{localStorage.setItem(BK,String(lastBk))}catch(e){}bkUpdate(true)}
+$("bki").onclick=()=>{S.bkRem=S.bkRem?0:1;save();if(navigator.vibrate)navigator.vibrate(10);bkUpdate(true)};
+document.addEventListener("visibilitychange",()=>{if(!document.hidden)bkUpdate()});bkUpdate(true);
+function goToday(){const t=new Date(),y=t.getFullYear(),m=t.getMonth();if(y===Y&&m===M){const r=document.querySelector(".row.t");if(r)r.scrollIntoView({block:"center",behavior:RM.matches?"auto":"smooth"});return}const dir=y*12+m>Y*12+M?1:-1;Y=y;M=m;render();slide(dir)}
+{let sx=0,sy=0,st=0,ok=false;
+ addEventListener("touchstart",e=>{const t=e.touches[0];ok=e.touches.length===1&&!!e.target.closest("#lst,.nav,.hero,.two,.big")&&!e.target.closest("input,select,textarea");sx=t.clientX;sy=t.clientY;st=Date.now()},{passive:true});
+ addEventListener("touchend",e=>{if(!ok)return;ok=false;const t=e.changedTouches[0],dx=t.clientX-sx,dy=t.clientY-sy;if(Math.abs(dx)>70&&Math.abs(dx)>Math.abs(dy)*1.8&&Date.now()-st<700){if(navigator.vibrate)navigator.vibrate(8);go(dx<0?1:-1)}},{passive:true})}
 function render(){
  $("ttl").textContent=MN[M]+" "+Y;
  {const nf=(S.showU?1:0)+(S.showNight?1:0)+(S.showL4?1:0);$("lst").style.setProperty("--nf",Math.max(1,nf));if(nf)$("lst").style.removeProperty("--fcw");else $("lst").style.setProperty("--fcw","0px")}
@@ -99,7 +157,7 @@ function render(){
  if(Y===T.getFullYear()&&M===T.getMonth()&&dt<T&&ty==="r"&&!m.h[d]&&!(m.l4&&m.l4[d]))m.h[d]=8;
   const um=ty=="r"&&m.u&&m.u[d],lm=ty=="r"&&m.l4&&m.l4[d],nm=m.night&&m.night[d],iso=Y+"-"+z(M+1)+"-"+z(d),ev=(S.ev||[]).filter(e=>e.d==iso).map(e=>`<span class="ev">📌 ${esc(e.t)}</span>`).join(" ");
  const flags=(S.showU?(ss[d]?`<button class="flag sold" disabled title="Sprzedany urlop – dzień przepracowany">U</button>`:ty==="r"?`<button class="flag ${um?"on":""}" data-flag="u" title="Urlop">U</button>`:"<span></span>"):"")+(S.showNight?`<button class="flag ${nm?"on":""}" data-flag="night" title="Nocki">N</button>`:"")+(S.showL4?(ty==="r"&&w>0&&w<6?`<button class="flag l4 ${lm?"on":""}" data-flag="l4" title="L4">L4</button>`:"<span></span>"):"");
-  out+=`<div class="row ${ty!="r"?ty:""} ${tod?"t":""} ${um?"u":""} ${lm?"l4":""} ${nm?"night":""} ${ss[d]?"sold":""}" data-d="${d}" data-t="${ty}"><div><b>${d}</b> ${WD[w]}<small>${[tod?"(dziś)":"",ss[d]?"sprzedany urlop":"",hn||""].join(" ").trim()}</small>${ev}</div>${ty=="r"?`<input data-k="h" inputmode="decimal" value="${m.h[d]||""}" ${lm?"readonly":""}>`:"<span></span>"}<input data-k="o" inputmode="decimal" value="${m.o[d]||""}"><div class="dayflags">${flags}</div></div>`}
+  out+=`<div class="row ${ty!="r"?ty:""} ${tod?"t":""} ${um?"u":""} ${lm?"l4":""} ${nm?"night":""} ${ss[d]?"sold":""}" data-d="${d}" data-t="${ty}" style="--i:${d}"><div><b>${d}</b> ${WD[w]}${tod?` <span class="tw"><span class="tdl">(dziś)</span><i class="dot ${ty==="r"?"g":"rd"}"></i></span>`:""}<small>${[ss[d]?"sprzedany urlop":"",hn||""].join(" ").trim()}</small>${ev}</div>${ty=="r"?`<input data-k="h" inputmode="decimal" value="${m.h[d]||""}" ${lm?"readonly":""}>`:"<span></span>"}<input data-k="o" inputmode="decimal" value="${m.o[d]||""}"><div class="dayflags">${flags}</div></div>`}
  $("days").innerHTML=out;$("cr").value=m.c||"";save();
  calc()}
 function calc(){
@@ -108,7 +166,7 @@ function calc(){
  if(h&&w==6)sh++;if(!h&&w>0&&w<6)wd++;hs+=h1;const lv=!h&&w>0&&w<6&&((m.u&&m.u[d])||(m.l4&&m.l4[d]));if(lv)of++;else if(h1>0||o1>0)dn++;else if(h||w==0||w==6)of++;
  if(h||w==0)ens+=o1;else if(w==6)os+=o1;else ew+=o1;}
  const cr=num(m.c),r=EF.rate,norm=(wd-sh)*S.norm,work=hs+os+ens+ew+cr;
- $("wk").textContent=f2(work)+" h";$("nm").textContent=f2(norm)+" h · "+(wd-sh)+" dni";$("dn").textContent=dn;$("of").textContent=of;
+ tween($("wk"),work,v=>f2(v)+" h");$("nm").textContent=f2(norm)+" h · "+(wd-sh)+" dni";$("dn").textContent=dn;$("of").textContent=of;
  const stazMo=(M+1==num(S.sm1)||M+1==num(S.sm2)),stz=stazMo?num(EF.staz):0;
  let nightBase=0,nightEx=0;const HN=hol(Y);for(let d=1;d<=N;d++)if(m.night&&m.night[d]){const w9=new Date(Y,M,d).getDay();if(!HN[M+"-"+d]&&w9>0&&w9<6)nightBase+=num(m.h[d]);else nightEx+=num(m.o[d])}
   const sd=num(m.sold),nOT=ew+cr,allOT=nOT+os+ens,effOT=allOT>0?(nOT*r*(1+EF.ot/100)+os*r*(1+EF.sat/100)+ens*r*(1+EF.sun/100))/allOT:r*(1+EF.ot/100);
@@ -120,7 +178,7 @@ function calc(){
  const q=(a,v,t)=>`<div class="ln${t?" tot":""}"><span>${a}</span><span>${zl(v)}</span></div>`,k=num(EF.konto);
  if(stazMo)h+=q("Wypłata w kopercie + stażowe",sum-k)+q("Wypłata + stażowe",sum);
   h+=q("Koperta",sum-k,1)+q("Wpływ na konto",k,1); const tot=`<div class="ln tot tt" style="border-top:1px solid var(--ln)"><span>WYPŁATA RAZEM</span><span>${zl(sum)}</span></div>`;
- $("kp").textContent=zl(sum-k);$("rz").textContent=zl(sum);
+ tween($("kp"),sum-k,zl);tween($("rz"),sum,zl);
  $("pay").innerHTML=`<details${payOpen?" open":""}><summary>Wynagrodzenie – ${MN[M]}</summary>${h}</details>`+tot;drawY();
  const sp=(s)=>{const a=new Date(s),b=new Date();if(isNaN(a))return"–";let y=b.getFullYear()-a.getFullYear(),mo=b.getMonth()-a.getMonth(),d=b.getDate()-a.getDate();if(d<0){mo--;d+=new Date(b.getFullYear(),b.getMonth(),0).getDate()}if(mo<0){y--;mo+=12}return y+" lat, "+mo+" mies., "+d+" dni"};
  {const a=sp(S.s1),b=sp(S.s2);$("stz").innerHTML=(a==b?"":`<div class="ln"><span>Bez umowy</span><span>${a}</span></div>`)+`<div class="ln"><span>Z umową</span><span>${b}</span></div>`}}
@@ -131,7 +189,7 @@ const tgl=x=>`<label for="s_${x[0]}">${x[1]}</label><input id="s_${x[0]}" type="
 const buildSet=()=>$("set").innerHTML=FLD.map(f=>fld(f)).join("")+
 [['showU','Pokaż / ukryj kolumnę Urlop'],['showNight','Pokaż / ukryj kolumnę Nocki i dodatek za nocki (+20%)'],['showL4','Pokaż / ukryj kolumnę L4'],['showSold','Pokaż / ukryj sprzedany urlop (dni, +100%)'],['showBonusDir','Pokaż premię dyrektorską'],['showBonusMachines','Pokaż premię obsługi dwóch maszyn'],['showBonusPosition','Pokaż premię stanowiskową'],['showBonusExtra','Pokaż premię za dodatkowe zajęcia'],['showBonusKier','Pokaż premię kierowniczą'],['showStaz','Pokaż stażowe']].map(x=>tgl(x)+(x[0]=="showSold"?'<label for="sold_in" id="soldlab"></label><input id="sold_in" inputmode="decimal" placeholder="dni">':"")).join("");
 buildSet();
-$("set").addEventListener("input",e=>{if(e.target.id=="sold_in"){cur().sold=Math.min(366,num(e.target.value));save();render();return}const k=e.target.id.slice(2);S[k]=e.target.type=="date"?e.target.value:e.target.type=="checkbox"?(e.target.checked?1:0):num(e.target.value);save();render()});
+$("set").addEventListener("input",e=>{if(e.target.type==="checkbox"){const c=e.target;c.classList.remove("pop");void c.offsetWidth;c.classList.add("pop")}if(e.target.id=="sold_in"){cur().sold=Math.min(366,num(e.target.value));save();render();return}const k=e.target.id.slice(2);S[k]=e.target.type=="date"?e.target.value:e.target.type=="checkbox"?(e.target.checked?1:0):num(e.target.value);save();render()});
 document.addEventListener("input",()=>{T=Date.now()},true);
 document.addEventListener("click",e=>{if(e.target.closest("button[data-flag],#eva,#evl button"))T=Date.now()},true);
 const msg=s=>{$("svmsg").textContent=s},stamp=()=>new Date().toLocaleString("pl-PL"),jt=[{description:"Dane kalendarza",accept:{"application/json":[".json"]}}];
@@ -140,18 +198,18 @@ async function loadData(f,h){
  try{let x=await f.text();if(x.trim()[0]=="<"){const m=x.match(/<script type="application\/json" id="seed">([\s\S]*?)<\/script>/);if(!m)throw 0;x=m[1]}
   const j=JSON.parse(x);if(!j||typeof j.S!="object"||typeof j.D!="object")throw 0;
   if(!confirm("Zastąpić obecne dane danymi z pliku "+f.name+"?"))return;
-  S={...DEF,...j.S};D=j.D;T=Date.now();save();buildSet();evl();render();if(h&&/\.json$/i.test(f.name))lastH=h;msg("Zaimportowano dane z pliku "+f.name+" ("+stamp()+")")}
+  S={...DEF,...j.S};D=j.D;T=Date.now();save();buildSet();evl();render();bkUpdate();if(h&&/\.json$/i.test(f.name))lastH=h;msg("Zaimportowano dane z pliku "+f.name+" ("+stamp()+")")}
  catch(err){msg("Nie udało się zaimportować – to nie jest plik z danymi kalendarza.")}}
 $("exp").onclick=async()=>{T=T||Date.now();save();const data=JSON.stringify({S,D,t:T}),name=lastH?lastH.name:"kalendarz_pracy_dane.json";
  if(window.showSaveFilePicker){
   try{const o={suggestedName:name,id:"kpdata",types:jt};if(lastH)o.startIn=lastH;
-   const h=await showSaveFilePicker(o),w=await h.createWritable();await w.write(data);await w.close();lastH=h;msg("Zapisano dane w pliku "+h.name+" ("+stamp()+")");return}
+   const h=await showSaveFilePicker(o),w=await h.createWritable();await w.write(data);await w.close();lastH=h;msg("Zapisano dane w pliku "+h.name+" ("+stamp()+")");markBackup();return}
   catch(e){if(e&&e.name=="AbortError")return}}
  const file=new File([data],name,{type:"application/json"});
- try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:name});msg("Wybierz miejsce zapisu pliku "+name+" (np. „Zapisz w Plikach”) i zatwierdź zastąpienie istniejącego pliku.");return}}
+ try{if(navigator.canShare&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:name});msg("Wybierz miejsce zapisu pliku "+name+" (np. „Zapisz w Plikach”) i zatwierdź zastąpienie istniejącego pliku.");markBackup();return}}
  catch(e){if(e&&e.name=="AbortError")return}
  const a=document.createElement("a");a.href=URL.createObjectURL(file);a.download=name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);
- msg("Pobrano plik "+name+" ("+stamp()+"). Ta przeglądarka nie pozwala wybrać miejsca ani nadpisać pliku, więc może dodać numerek.")};
+ msg("Pobrano plik "+name+" ("+stamp()+"). Ta przeglądarka nie pozwala wybrać miejsca ani nadpisać pliku, więc może dodać numerek.");markBackup()};
 $("imp").onclick=async()=>{
  if(window.showOpenFilePicker){
   try{const o={id:"kpdata",types:[{description:"Dane kalendarza",accept:{"application/json":[".json"],"text/html":[".html"]}}]};if(lastH)o.startIn=lastH;
@@ -159,9 +217,9 @@ $("imp").onclick=async()=>{
   catch(e){if(e&&e.name=="AbortError")return}}
  $("impf").click()};
 $("impf").onchange=e=>{const f=e.target.files[0];e.target.value="";if(f)loadData(f)};
-const go=n=>{M+=n;if(M>11){M=0;Y++}if(M<0){M=11;Y--}render()};
+const go=n=>{M+=n;if(M>11){M=0;Y++}if(M<0){M=11;Y--}render();slide(n)};
 $("pv").onclick=()=>go(-1);$("nx").onclick=()=>go(1);
-$("ttl").onclick=()=>{Y=now.getFullYear();M=now.getMonth();render()};
+$("ttl").onclick=goToday;
 function yopts(sel){const ys=new Set([new Date().getFullYear(),Y,sel]);Object.keys(D).forEach(k=>ys.add(+k.split("-")[0]));return[...ys].filter(x=>x>1999).sort((a,b)=>a-b).map(y=>`<option value="${y}"${y==sel?" selected":""}>${y}</option>`).join("")}
 const ysel=(id,sel)=>`<div style="margin:6px 0"><select id="${id}" style="font:inherit;padding:4px 8px">${yopts(sel)}</select></div>`;
 function ystats(Y){const H=hol(Y);let hs=0,os=0,wk=0,wd=0,off=0,uz=0,sl=0,wrk=0,ovt=0,l4=0,dY=((Y%4==0&&Y%100!=0)||Y%400==0)?366:365;
@@ -178,10 +236,13 @@ function drawY(){const a=ystats(Y),t=num(S.urlop),car=carryOver(Y);
  drawC(anSel||Y)}
 function drawC(Y){
  let monthly=[],kAcc=0;const TT=new Date(),ty=TT.getFullYear(),tm=TT.getMonth(),td=TT.getDate();for(let mo=0;mo<12;mo++){if(Y>ty||(Y===ty&&mo>tm)){monthly.push(null);continue}const EF=eff(Y,mo),mm=D[Y+"-"+(mo+1)]||{h:{},o:{},night:{}},NN=new Date(Y,mo+1,0).getDate(),HH=hol(Y);let base=0,sa=0,su=0,extra=0,nh=0;for(let d=1;d<=NN;d++){if(Y===ty&&mo===tm&&d>td)break;const w=new Date(Y,mo,d).getDay(),holiday=!!HH[mo+"-"+d],regular=!holiday&&w>0&&w<6,hh=regular?num(mm.h[d]):0,oo=num(mm.o[d]);base+=hh;if(mm.night&&mm.night[d])nh+=regular?hh:oo;if(w===6&&!holiday)sa+=hh+oo;else if(w===0||holiday)su+=hh+oo;else extra+=oo;}const st=(mo+1==num(S.sm1)||mo+1==num(S.sm2))?num(EF.staz):0;monthly.push(base*num(EF.rate)+nh*num(EF.rate)*.2+sa*num(EF.rate)*(1+EF.sat/100)+su*num(EF.rate)*(1+EF.sun/100)+(extra+num(mm.c))*num(EF.rate)*(1+EF.ot/100)+num(EF.uzn)+num(EF.kier)+num(EF.bonusDir)+num(EF.bonusMachines)+num(EF.bonusPosition)+num(EF.bonusExtra)+st+num(mm.sold)*(num(S.norm)||8)*num(EF.rate)*2);kAcc+=num(EF.konto);}
- const mx=Math.max(1,...monthly.filter(v=>v!=null)),totY=monthly.reduce((a,b)=>a+(b||0),0),kY=kAcc,sm="font-size:11px;font-weight:300;color:var(--mu);text-align:right";$("annual").innerHTML=`<details data-k="an"${anOpen?" open":""}><summary>Zarobki miesięczne – ${Y}</summary>${ysel("ans",Y)}<div class="chart">${monthly.map((v,i)=>v==null?`<div class="barbox"></div>`:`<div class="barbox"><span class="barvalue">${Math.round(v)}</span><div class="bar" style="height:${Math.max(2,v/mx*100)}%"></div><span class="barlabel">1.${z(i+1)}.${Y}</span></div>`).join("")}</div><div class="ln tot"><span>Łącznie w roku</span><span>${zl(totY)}</span></div><div style="${sm}">na konto - ${zl(kY)}</div><div style="${sm}">w kopercie - ${zl(totY-kY)}</div></details>`}
-$("days").addEventListener("click",e=>{const b=e.target.closest("button[data-flag]");if(!b)return;const r=b.closest(".row"),m=cur(),d=r.dataset.d,flag=b.dataset.flag,hi=r.querySelector('input[data-k="h"]'),prop=flag==="u"?"u":flag==="l4"?"l4":"night",v=num(S.norm)||8;m[prop]=m[prop]||{};if(m[prop][d]){delete m[prop][d];if(flag==="l4"&&num(m.h[d])===8){delete m.h[d];hi.value=""}}else{m[prop][d]=1;if(flag==="u"||flag==="l4"){m.h[d]=flag==="l4"?8:v;hi.value=m.h[d]}}save();render()});
-$("yr").addEventListener("toggle",e=>{if(e.target.dataset.k=="yr")yrOpen=e.target.open},true);$("annual").addEventListener("toggle",e=>{if(e.target.dataset.k=="an")anOpen=e.target.open},true);
-$("yr").addEventListener("change",e=>{if(e.target.id=="yrs"){yrSel=+e.target.value;drawY()}});$("annual").addEventListener("change",e=>{if(e.target.id=="ans"){anSel=+e.target.value;drawY()}});
+ const mx=Math.max(1,...monthly.filter(v=>v!=null)),totY=monthly.reduce((a,b)=>a+(b||0),0),kY=kAcc,sm="font-size:11px;font-weight:300;color:var(--mu);text-align:right";$("annual").innerHTML=`<details data-k="an"${anOpen?" open":""}><summary>Zarobki miesięczne – ${Y}</summary>${ysel("ans",Y)}<div class="chart">${monthly.map((v,i)=>v==null?`<div class="barbox"></div>`:`<div class="barbox" style="--i:${i}"><span class="barvalue">${Math.round(v)}</span><div class="bar" style="height:${Math.max(2,v/mx*100)}%"></div><span class="barlabel">1.${z(i+1)}.${Y}</span></div>`).join("")}</div><div class="ln tot"><span>Łącznie w roku</span><span>${zl(totY)}</span></div><div style="${sm}">na konto - ${zl(kY)}</div><div style="${sm}">w kopercie - ${zl(totY-kY)}</div></details>`;growChart()}
+$("days").addEventListener("click",e=>{const b=e.target.closest("button[data-flag]");if(!b)return;const r=b.closest(".row"),m=cur(),d=r.dataset.d,flag=b.dataset.flag,hi=r.querySelector('input[data-k="h"]'),prop=flag==="u"?"u":flag==="l4"?"l4":"night",v=num(S.norm)||8;m[prop]=m[prop]||{};const was=!!m[prop][d];
+ if(was){delete m[prop][d];if(flag==="l4"&&num(m.h[d])===8){delete m.h[d];if(hi)hi.value=""}}else{m[prop][d]=1;if(flag==="u"||flag==="l4"){m.h[d]=flag==="l4"?8:v;if(hi)hi.value=m.h[d]}}
+ r.classList.toggle(prop,!was);b.classList.toggle("on",!was);b.classList.remove("pop");void b.offsetWidth;b.classList.add("pop");
+ if(navigator.vibrate)navigator.vibrate(was?8:14);save();calc();clearTimeout(rt);if(RM.matches)render();else rt=setTimeout(render,340);});
+$("yr").addEventListener("toggle",e=>{if(e.target.dataset.k=="yr")yrOpen=e.target.open},true);$("annual").addEventListener("toggle",e=>{if(e.target.dataset.k!="an")return;const o=e.target.open;if(o===anOpen)return;anOpen=o;if(o&&!RM.matches){const c=e.target.querySelector(".chart");if(c){c.classList.remove("pre","grow");void c.offsetWidth;c.classList.add("grow")}}},true);
+$("yr").addEventListener("change",e=>{if(e.target.id=="yrs"){yrSel=+e.target.value;drawY()}});$("annual").addEventListener("change",e=>{if(e.target.id=="ans"){anSel=+e.target.value;pendingGrow=true;drawY()}});
 let evOpen=false;
 function evl(){const E=S.ev||[],L=E.map((e,i)=>[e,i]).sort((a,b)=>a[0].d<b[0].d?-1:1).map(x=>{const a=x[0].d.split("-");return`<div class="ln"><span>${a[2]}.${a[1]}.${a[0]} – ${esc(x[0].t)}</span><button data-i="${x[1]}">×</button></div>`}).join("");$("evl").innerHTML=E.length?`<details data-k="ev"${evOpen?" open":""}><summary>Wpisane wydarzenia (${E.length})</summary><div style="max-height:240px;overflow-y:auto">${L}</div></details>`:""}
 $("evl").addEventListener("toggle",e=>{if(e.target.dataset&&e.target.dataset.k=="ev")evOpen=e.target.open},true);
