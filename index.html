@@ -114,6 +114,7 @@ select:focus-visible,input:focus-visible{outline:2px solid #305496;outline-offse
 #evl{margin-top:14px}
 #pay details:not([open])>summary{padding-bottom:10px;margin-bottom:6px;border-bottom:1px solid var(--ln)}
 @media(prefers-reduced-motion:no-preference){details>summary::before{transition:transform .4s cubic-bezier(.34,1.56,.64,1),opacity .2s}details>summary:hover::before{opacity:1}.gears g{transition:transform .8s cubic-bezier(.34,1.3,.64,1)}}
+#evl details>summary+div{margin-top:14px}
 </style></head><body><main>
 <div class="card nav"><button id="pv" aria-label="Poprzedni miesiąc"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M15 5l-7 7 7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button><h1 id="ttl"></h1><button id="nx" aria-label="Następny miesiąc"><svg viewBox="0 0 24 24" width="22" height="22"><path d="M9 5l7 7-7 7" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg></button></div>
 <div class="hero"><span>Przepracowane godziny (godziny + nadgodziny)</span><b id="wk"></b></div>
@@ -139,10 +140,10 @@ select:focus-visible,input:focus-visible{outline:2px solid #305496;outline-offse
 const MN=["Styczeń","Luty","Marzec","Kwiecień","Maj","Czerwiec","Lipiec","Sierpień","Wrzesień","Październik","Listopad","Grudzień"];
 const WD=["niedziela","poniedziałek","wtorek","środa","czwartek","piątek","sobota"];
 const KEY="kalendarz-pracy-v2";let yrOpen=true,anOpen=true,yrSel=null,anSel=null;
-const DEF={showSold:1,showStaz:1,showU:1,urlop:0,ev:[],rate:0,uzn:0,kier:0,ot:100,sat:100,sun:200,konto:0,staz:0,sm1:0,sm2:0,norm:8,s1:"",s2:"",showNight:1,showL4:1,showBonusDir:1,showBonusMachines:1,showBonusPosition:1,showBonusExtra:1,bonusDir:0,bonusMachines:0,bonusPosition:0,bonusExtra:0,showBonusKier:1,bkRem:1};
+const DEF={showSold:1,showStaz:1,showU:1,urlop:0,ev:[],rate:0,uzn:0,kier:0,ot:100,sat:100,sun:200,konto:0,staz:0,sm1:0,sm2:0,norm:8,s1:"",s2:"",showNight:1,showL4:1,showBonusDir:1,showBonusMachines:1,showBonusPosition:1,showBonusExtra:1,bonusDir:0,bonusMachines:0,bonusPosition:0,bonusExtra:0,showBonusKier:1,bkRem:0,bkMig:1};
 const FLD=[["rate","Stawka godzinowa (zł)"],["uzn","Premia uznaniowa (zł)"],["ot","Dodatek za nadgodziny (%)"],["sat","Dodatek za sobotę (%)"],["sun","Dodatek za niedzielę i święta (%)"],["konto","Wpływ na konto, stały (zł)"],["staz","Stażowe (zł)"],["sm1","Miesiąc stażowego 1"],["sm2","Miesiąc stażowego 2"],["norm","Godzin w dniu roboczym"],["urlop","Dni urlopu w roku"],["s1","Start pracy, bez umowy"],["s2","Start pracy, z umową"],["bonusDir","Premia dyrektorska (zł)"],["bonusMachines","Premia obsługi dwóch maszyn (zł)"],["bonusPosition","Premia stanowiskowa (zł)"],["bonusExtra","Premia za dodatkowe zajęcia (zł)"],["kier","Premia kierownicza (zł)"]];
 let S={...DEF},D={},now=new Date(),Y=now.getFullYear(),M=now.getMonth();
-let T=0;try{const j=JSON.parse(localStorage.getItem(KEY)||"{}");S={...DEF,...(j.S||{})};D=j.D||{};T=j.t||0}catch(e){}
+let T=0;try{const j=JSON.parse(localStorage.getItem(KEY)||"{}");S={...DEF,...(j.S||{})};if(!(j.S||{}).bkMig){S.bkRem=0;S.bkMig=1}D=j.D||{};T=j.t||0}catch(e){}
 const RK=["rate","uzn","konto","staz","bonusDir","bonusMachines","bonusPosition","bonusExtra","kier","ot","sat","sun"];
 const kc=k=>{const a=k.split("-");return +a[0]*12+ +a[1]};
 function snapNow(){const t=new Date(),k=t.getFullYear()+"-"+(t.getMonth()+1);D[k]=D[k]||{h:{},o:{},u:{},l4:{},night:{},c:""};const o={};RK.forEach(r=>o[r]=S[r]);D[k].snap=o}
