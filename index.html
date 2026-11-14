@@ -183,7 +183,7 @@ const BK=KEY+":backup";let lastBk=0;try{lastBk=+localStorage.getItem(BK)||0}catc
 function bkDue(){const t=new Date(),s=new Date(t.getFullYear(),t.getMonth(),new Date(t.getFullYear(),t.getMonth()+1,0).getDate()-2);return t>=s&&lastBk<s.getTime()}
 function bkUpdate(pop){const on=!!S.bkRem,d=lastBk?Math.floor((Date.now()-lastBk)/864e5):0,due=on&&bkDue(),el=$("bk");el.classList.toggle("off",!on);el.classList.toggle("due",due);$("bki").setAttribute("aria-checked",on?"true":"false");
  $("bkd").textContent=lastBk?new Date(lastBk).toLocaleDateString("pl-PL")+(due?" · "+d+" dni temu":""):"jeszcze nie wykonano";
- $("bkn").textContent="Przypomnienie raz w miesiącu, 2 dni przed końcem · "+(on?"włączone":"wyłączone")+" (dotknij ikony)";
+ $("bkn").textContent="Przypomnienie raz w miesiącu, 2 dni przed końcem miesiąca · "+(on?"włączone":"wyłączone")+" (dotknij ikony)";
  if(pop&&on){const i=$("bki");i.classList.remove("pop");void i.offsetWidth;i.classList.add("pop")}}
 function markBackup(){lastBk=Date.now();try{localStorage.setItem(BK,String(lastBk))}catch(e){}bkUpdate(true)}
 $("bki").onclick=()=>{S.bkRem=S.bkRem?0:1;save();if(navigator.vibrate)navigator.vibrate(10);bkUpdate(true)};
